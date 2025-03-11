@@ -1,1 +1,105 @@
+#include <iostream>
+#include <map>
+using namespace std;
 
+// 多項式類別
+class Polynomial {
+private:
+    map<int, int> *terms; //用指標存指數和係數
+public:
+    // 建構函式
+    Polynomial() {
+        terms = new map<int, int>();
+    }
+
+    // 解構函式
+    ~Polynomial() {
+        delete terms;// 程式結束時釋放記憶體
+    }
+
+    // 讀取多項式
+    void read() {
+        int n, coef, exp;
+        cin >> n;
+        // 根據項數，讀入對應的係數和指數
+        for (int i = 0; i < n; i++) {
+            cin >> coef >> exp;//輸入係數和指數次方
+            (*terms)[exp] += coef;//把相同指數的係數相加
+        }
+    }
+
+    // 輸出多項式
+    void print() {
+        for (auto it = terms->rbegin(); it != terms->rend(); ++it) {// 以降冪順序輸出
+            cout << it->second << "x^" << it->first << " ";
+        }
+        cout << endl;
+    }
+
+    // 多項式相加（回傳指標）
+    Polynomial* add(const Polynomial &other) {
+        Polynomial* result = new Polynomial(); // 創建一個新的多項式來存加法結果
+        for (auto &term : *this->terms) {// 先把第一個多項式存進 
+            (*result->terms)[term.first] = term.second;
+        }
+        for (auto &term : *other.terms) {// 再把第二個多項式加進去
+            (*result->terms)[term.first] += term.second;
+        }
+        return result; // 回傳加法結果
+    }
+
+    // 多項式相乘（回傳指標）
+    Polynomial* multiply(const Polynomial &other) {
+        Polynomial* result = new Polynomial();// 創建新多項式來存結果
+        for (auto &t1 : *terms) {// 檢查第一個多項式
+            for (auto &t2 : *other.terms) {// 檢查第二個多項式
+                (*result->terms)[t1.first + t2.first] += t1.second * t2.second;// 係數相乘，同次方指數相加
+            }
+        }
+        return result; // 回傳相乘結果
+    }
+
+    // 多項式代x求值
+    int evaluate(int x) {// 存最後的結果
+        int sum = 0;
+        for (auto &term : *terms) {// 一項一項算
+            int power = 1;// 計算 x 的次方
+            for (int i = 0; i < term.first; i++) power *= x;
+            sum += term.second * power;// 把這項的值加進總和
+        }
+        return sum;
+    }
+};
+
+int main() {
+    Polynomial* p1 = new Polynomial(); // 動態建立第一個多項式
+    Polynomial* p2 = new Polynomial();// 動態建立第二個多項式
+    Polynomial* result;
+
+    // 讀取多項式
+    p1->read();
+    p2->read();
+
+    // 加法
+    result = p1->add(*p2);//第一第二式相加
+    cout << "Addition: ";
+    result->print();// 印出結果
+    delete result; // 釋放記憶體
+
+    // 乘法
+    result = p1->multiply(*p2);//第一第二式相乘
+    cout << "Multiplication: ";
+    result->print();// 印出結果
+    delete result; // 釋放記憶體
+
+    // 求值
+    int x;
+    cin >> x;
+    cout << "Evaluation at x = " << x << ": " << p1->evaluate(x) << endl;//計算和輸出結果
+
+    // 釋放動態記憶體
+    delete p1;
+    delete p2;
+
+    return 0;
+}
