@@ -1,1 +1,87 @@
+#include <iostream>
+#include <vector>
+#include <map>
+using namespace std;
+
+class Polynomial {
+private:
+    map<int, int> terms; // 存指數和係數
+
+public:
+    void read() {
+        int n, coef, exp;
+        cin >> n; // 輸入多項事的項數
+        //將每項指數和係數存入map
+        for (int i = 0; i < n; i++) {
+            cin >> coef >> exp; // 輸入係數和指數
+            terms[exp] += coef; // 把同次方的係數相加
+        }
+    }
+    // 輸出多項式
+    void print() {
+        // 以降冪順序輸出
+        for (auto it = terms.rbegin(); it != terms.rend(); ++it) {
+            cout << it->second << "x^" << it->first << " ";
+        }
+        cout << endl;
+    }
+
+    // 多項式相加
+    Polynomial add(const Polynomial &other) {
+        Polynomial result = *this;// 先複製當前多項式
+        for (auto &term : other.terms) {
+            result.terms[term.first] += term.second;//相同次方相加
+        }
+        return result;
+    }
+
+    // 多項式相乘
+    Polynomial multiply(const Polynomial &other) {
+        Polynomial result;
+        for (auto &t1 : terms) {
+            for (auto &t2 : other.terms) {
+                result.terms[t1.first + t2.first] += t1.second * t2.second;// 係數相乘，同次方相加
+            }
+        }
+        return result;
+    }
+
+    // 多項式代入x求值
+    int evaluate(int x) {
+        int sum = 0;// 存計算結果
+        // 檢查多項式中的每一項
+        for (auto &term : terms) {
+            int power = 1;
+            for (int i = 0; i < term.first; i++) power *= x; // 計算 x^指數
+            sum += term.second * power; // 計算係數乘 x^指數且累加
+        }
+        return sum;
+    }
+};
+
+int main() {
+    Polynomial p1, p2, result;
+    int x;
+
+    p1.read();//第一個多項式
+    p2.read();//第二個多項式
+
+    // 加法
+    result = p1.add(p2);//第一第二式相加
+    cout << "Addition: ";
+    result.print();//輸出加完結果
+
+    // 乘法
+    result = p1.multiply(p2);//第一第二式相乘
+    cout << "Multiplication: ";
+    result.print();//輸出乘完結果
+
+    // 求值
+    cin >> x; // 代入 x 值
+    cout << "Evaluation at x = " << x << ": " << p1.evaluate(x) << endl;
+
+    return 0;
+}
+
+
 
