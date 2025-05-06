@@ -78,7 +78,7 @@ public:
 
 int main() {
     // 從文件讀取輸入元素
-    string filename = "input1.txt"; // 請確保你的 input.txt 檔案在同一資料夾
+    string filename = "input.txt"; // 請確保你的 input.txt 檔案在同一資料夾
     vector<int> arr = readFromFile(filename); // 讀取數據
 
     if (arr.empty()) { // 如果數據為空
@@ -103,3 +103,4 @@ int main() {
     system("pause");
     return 0;
 }
+
