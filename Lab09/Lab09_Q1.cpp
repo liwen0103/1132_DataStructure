@@ -32,38 +32,38 @@ vector<int> readFromFile(const string& filename) {
     return arr;
 }
 
-class MinHeap {
+class MaxHeap {
 public:
-    vector<int> heap; // 儲存Min Heap的元素
+    vector<int> heap; // 儲存Max Heap的元素
 
-    // 建立Min Heap
-    void buildMinHeap(vector<int>& arr) {  //建立Min Heap
+    // 建立Max Heap
+    void buildMaxHeap(vector<int>& arr) {  //建立Max Heap
         heap = arr;
 
-        for (int i = (heap.size() / 2) - 1; i >= 0; i--) { // 從最後一個非葉子節點開始向上執行Min Heap
+        for (int i = (heap.size() / 2) - 1; i >= 0; i--) { // 從最後一個非葉子節點開始向上執行Max Heap
             heapify(i);
         }
     }
 
-    void heapify(int i) { // 堆化函式（確保以 i 為根的子樹符合Min Heap性質）
-        int smallest = i;          // 假設當前節點是最小的
+    void heapify(int i) { // 堆化函式（確保以 i 為根的子樹符合Max Heap性質）
+        int largest = i;          // 假設當前節點是最大的
         int left = 2 * i + 1;     // 左子節點索引
         int right = 2 * i + 2;    // 右子節點索引
 
-        // 檢查左子節點是否比當前節點小
-        if (left < heap.size() && heap[left] < heap[smallest]) {
-            smallest = left;
+        // 檢查左子節點是否比當前節點大
+        if (left < heap.size() && heap[left] > heap[largest]) {
+            largest = left;
         }
 
-        // 檢查右子節點是否比當前節點小
-        if (right < heap.size() && heap[right] < heap[smallest]) {
-            smallest = right;
+        // 檢查右子節點是否比當前節點大
+        if (right < heap.size() && heap[right] > heap[largest]) {
+            largest = right;
         }
 
-        // 如果最小的不是父節點，交換並繼續堆化
-        if (smallest != i) {
-            swap(heap[i], heap[smallest]);
-            heapify(smallest); // 遞迴處理受影響的子樹
+        // 如果最大的不是父節點，交換並繼續堆化
+        if (largest != i) {
+            swap(heap[i], heap[largest]);
+            heapify(largest); // 遞迴處理受影響的子樹
         }
     }
 
@@ -92,15 +92,14 @@ int main() {
     }
     cout << endl;
 
-    MinHeap minHeap; // 創建Min Heap對象
-    minHeap.buildMinHeap(arr); // 建立Min Heap
+    MaxHeap maxHeap; // 創建Max Heap對象
+    maxHeap.buildMaxHeap(arr); // 建立Max Heap
 
-    // 輸出Min Heap的內容
-    cout << "Min Heap(By BFS): ";
-    minHeap.printHeap();
+    // 輸出Max Heap的內容
+    cout << "Max Heap(By BFS): ";
+    maxHeap.printHeap();
     cout << endl;
 
     system("pause");
     return 0;
 }
-
